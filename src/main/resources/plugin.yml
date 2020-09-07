@@ -1,0 +1,8 @@
+name: PacketsTutorialProtocolLib
+version: ${project.version}
+main: me.kodysimpson.packetstutorialprotocollib.PacketsTutorialProtocolLib
+api-version: 1.16
+depend: [ProtocolLib]
+commands:
+  boom:
+    description: yeet
