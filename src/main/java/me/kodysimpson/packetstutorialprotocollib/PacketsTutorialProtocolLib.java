@@ -8,6 +8,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import me.kodysimpson.packetstutorialprotocollib.commands.BoomCommand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,17 +42,26 @@ public final class PacketsTutorialProtocolLib extends JavaPlugin {
             @Override
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
+                int entityID = packet.getIntegers().read(0);
                 short x = packet.getShorts().read(0);
                 short y = packet.getShorts().read(1);
                 short z = packet.getShorts().read(2);
-                System.out.println(x + " : " + y + " : " + z);
+                System.out.println("OUTGOING: " + x + " : " + y + " : " + z);
+                System.out.println("Entity ID: " + entityID);
+
+                Entity entity = manager.getEntityFromID(event.getPlayer().getWorld(), entityID);
+                entity.teleport(event.getPlayer().getLocation());
+            }
+        });
+
+        //Stop players from being able to talk
+        manager.addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Client.CHAT) {
+            @Override
+            public void onPacketReceiving(PacketEvent event) {
+                event.setCancelled(true);
             }
         });
 
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
 }
